@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+  body {
+    background-color: #c5c6d1;
+  }
+  #map {
+    height: 400px;
+    width: 100%;
+  }
+  .buttons {
+    width: 100px;
+    height: 100px;
+
+  }
+
+  .graphs {
+    width: 300px;
+    height: 400px;
+    /* position: absolute; */
+    left: 0px;
+    top: 0px;
+    /* z-index: -1; */
+  }
+
+  .Button {
+    /* display: block; */
+    margin-left: auto;
+    margin-right: auto;
+    background-color:#f40505;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:28px;
+	border:1px solid #f40505;
+	display:inline-block;
+	cursor:pointer;
+	color:#000000;
+	font-family:Arial;
+	font-size:17px;
+	padding:16px 31px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #2f6627;
+}
+.Button:hover {
+	background-color:#d21f1f;
+}
+.Button:active {
+	position:relative;
+	top:1px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  /* background-color: #2196F3; */
+  padding: 10px;
+}
+.grid-item {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  font-size: 30px;
+  text-align: center;
+}
+  </style>
+
+  <script src="http://www.chartjs.org/dist/2.7.2/Chart.bundle.js"></script>
+</head>
+<body>
+
+<div class="grid-container">
+
+  <!-- Graph 1 -->
+  <div class="graphs grid-item">
+    <canvas id="myChart" ></canvas>
+<script>
+
+var xValues = [60,120,180,240,300,360,420,480,540,600,660,720,780,840,900,960,1020,1080,1140,1200,1260,1320,1380,1440]; //axis labels
+var yValues = [0.3,0.3,0.4,0.5,0.3,0.3,0.3,0.3,0.4,0.3,0.4,0.3,0.3,0.4,0.5,0.3,0.3,0.3,0.3,0.4,0.3,0.4,0.3,0.3]; // chart values
+
+
+var ctx = document.getElementById("myChart").getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: xValues,
+        datasets: [  {
+            data: xValues,
+            borderColor: "#3cba9f",
+            fill: false
+          },
+          {
+            data: yValues,
+            borderColor: "#ffcc00",
+            fill: false
+          },]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        }
+    }
+});
+</script>
+  </div>
+
+  <!-- Graph 2 -->
+  <div class="graphs grid-item">
+    <canvas id="myChart2"></canvas>
+    <script>
+
+    var xValues = ['Agresion Agravada','Apropiacion Ilegal','Asesinato','Escalamiento','Incendio Malicioso','Otros','Robo','Trata Humana','Vehiculo Hurtado','Violacion'];   //axis labels
+
+
+
+
+    var ctx = document.getElementById("myChart2").getContext('2d');
+    var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: xValues,
+        datasets: [{
+            data: [0.3,0.1,0.1,0.2,0.4,0.1,0.0,0.1,0.1,0.1],
+            backgroundColor: "#3cba9f",
+            fill: false
+          },
+          {
+            data: [0.1,0.1,0.3,0.1,0.2,0.3,0.0,0.1,0.2,0.1],
+            backgroundColor: "#ffcc00",
+            fill: false
+          },]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero:true
+            }
+          }]
+        }
+      }
+    });
+  </script>
+  </div>
+
+  <!-- Button -->
+  <div id="Button" class="grid-item">
+
+    <form action="" method="POST" id="form1">
+      <input type="hidden" name="time" id="time"><br>
+      <input type="hidden" name="latitude" id="latitude"><br>
+      <input type="hidden" name="longitude" id="longitude"><br>
+    </form>
+    <!-- <a href="" class="Button">Analyze</a> -->
+    <button type="submit" form="form1" value="Submit" class="Button">Submit</button>
+  </div>
+
+  </div>
+
+<!-- Map -->
+  <div id="map"></div>
+  <script>
+  function initMap() {
+    //New map
+    var cen = {lat: 18.2208, lng: -66.4001};
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 9,
+      center: cen
+    });
+
+    //Draggable pin w. intial Current Location
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position){
+        var currentTime = new Date();
+        var user_time = currentTime.getHours() * 60 + currentTime.getMinutes();
+        console.log(user_time);
+
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+        console.log(latitude);
+        console.log(longitude);
+        var coords = new google.maps.LatLng(latitude, longitude);
+
+        var marker = new google.maps.Marker({
+          position: coords,
+          map: map,
+          animation: google.maps.Animation.DROP,
+          draggable: true,
+          title: "You are here!"
+        });
+
+        google.maps.event.addListener(marker, "drag", function(){
+          var latitude=marker.getPosition().lat();
+          var longitude=marker.getPosition().lng();
+          console.log(latitude);
+          console.log(longitude);
+          console.log(user_time);
+
+
+        });
+        document.getElementById("latitude").value = latitude;
+        document.getElementById("longitude").value = longitude;
+        document.getElementById("time").value = user_time;
+      });
+
+
+      }
+  }
+
+
+  </script>
+
+  <script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-QAbNlslPECgZbQAXfdP_W_xy2aK6FH8&callback=initMap">
+  </script>
+
+
+</body>
+</html>
