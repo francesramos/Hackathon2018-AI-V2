@@ -77,8 +77,9 @@
 <script>
 
 var xValues = [60,120,180,240,300,360,420,480,540,600,660,720,780,840,900,960,1020,1080,1140,1200,1260,1320,1380,1440]; //axis labels
-var yValues = [0.3,0.3,0.4,0.5,0.3,0.3,0.3,0.3,0.4,0.3,0.4,0.3,0.3,0.4,0.5,0.3,0.3,0.3,0.3,0.4,0.3,0.4,0.3,0.3]; // chart values
-
+var yValues = {{graph_1_y}};
+//chart values
+// console.log(yValues)
 
 var ctx = document.getElementById("myChart").getContext('2d');
 var myChart = new Chart(ctx, {
@@ -115,7 +116,8 @@ var myChart = new Chart(ctx, {
     <script>
 
     var xValues = ['Agresion Agravada','Apropiacion Ilegal','Asesinato','Escalamiento','Incendio Malicioso','Otros','Robo','Trata Humana','Vehiculo Hurtado','Violacion'];   //axis labels
-
+    var yValues = {{graph_2_y}};
+    console.log(yValues)
 
 
 
@@ -125,12 +127,12 @@ var myChart = new Chart(ctx, {
       data: {
         labels: xValues,
         datasets: [{
-            data: [0.3,0.1,0.1,0.2,0.4,0.1,0.0,0.1,0.1,0.1],
+            data: {{graph_2_y}},
             backgroundColor: "#3cba9f",
             fill: false
           },
           {
-            data: [0.1,0.1,0.3,0.1,0.2,0.3,0.0,0.1,0.2,0.1],
+            data: {{graph_2_y}},
             backgroundColor: "#ffcc00",
             fill: false
           },]
@@ -179,12 +181,12 @@ var myChart = new Chart(ctx, {
         navigator.geolocation.getCurrentPosition(function(position){
         var currentTime = new Date();
         var user_time = currentTime.getHours() * 60 + currentTime.getMinutes();
-        console.log(user_time);
+        // console.log(user_time);
 
         var latitude = position.coords.latitude;
         var longitude = position.coords.longitude;
-        console.log(latitude);
-        console.log(longitude);
+        // console.log(latitude);
+        // console.log(longitude);
         var coords = new google.maps.LatLng(latitude, longitude);
 
         var marker = new google.maps.Marker({
@@ -196,14 +198,20 @@ var myChart = new Chart(ctx, {
         });
 
         google.maps.event.addListener(marker, "drag", function(){
-          var latitude=marker.getPosition().lat();
-          var longitude=marker.getPosition().lng();
-          console.log(latitude);
-          console.log(longitude);
-          console.log(user_time);
+          latitude=marker.getPosition().lat();
+          longitude=marker.getPosition().lng();
+          document.getElementById("latitude").value = latitude;
+          document.getElementById("longitude").value = longitude;
+          document.getElementById("time").value = user_time;
+          // console.log(latitude);
+          // console.log(longitude);
+          // console.log(user_time);
 
 
         });
+        console.log(latitude);
+        console.log(longitude);
+        console.log(user_time);
         document.getElementById("latitude").value = latitude;
         document.getElementById("longitude").value = longitude;
         document.getElementById("time").value = user_time;
